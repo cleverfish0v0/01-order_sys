@@ -80,14 +80,6 @@ WSGI_APPLICATION = 'order_sys.wsgi.application'
 
 # 数据库连接
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'order_sys',  # 数据库名字
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '127.0.0.1',  # ip
-        'PORT': 3306,
-    }
 }
 
 # Password validation
@@ -134,22 +126,12 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CACHES = {
-    "default": {
-        # 缓存的后端
-        "BACKEND": "django_redis.cache.RedisCache",
-        # 缓存ip和端口
-        "LOCATION": "redis://127.0.0.1:6379",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
-            # 没有密码
-        },
-    }
+
 }
 
 # SESSION_ENGINE = "django.contrib.session.backends.cache"
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = "default"
+SESSION_ENGINE = ''
+SESSION_CACHE_ALIAS = ""
 
 from django.conf import global_settings
 
@@ -227,3 +209,10 @@ NB_PERMISSION_PUBLIC = {
 QUEUE_TASK_NAME = 'YANG_TASK_QUEUE'
 # 四个位置，存储的位置
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+
+try:
+    from .local_settings import *
+except Exception as e:
+
+    pass
