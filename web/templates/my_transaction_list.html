@@ -1,0 +1,102 @@
+<!--继承模板-->
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/search-group.css' %}">
+    <style>
+        .top-message-error {
+            position: fixed;
+            left: 0;
+            right: 0;
+            width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 50px;
+        }
+
+    </style>
+
+
+{% endblock %}
+
+{% block content %}
+
+    {% if search_group_row_list %}
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <i class="fa fa-filter" aria-hidden="true"></i> 快速筛选
+              </div>
+              <div class="panel-body">
+                  <div class="search-group">
+                      {% for row in search_group_row_list %}
+                          <div class="row">
+                              {% for obj in row %}
+                                  {{ obj|safe }}
+                              {% endfor %}
+                          </div>
+                      {% endfor %}
+                  </div>
+              </div>
+          </div>
+      {% endif %}
+
+    <div class="clearfix">
+        <div class="right">
+            <form class="form-inline row" method="get" accept-charset="UTF-8">
+                <div class="form-group col-md-10">
+                    <input class="form-control" type="text" placeholder="请输入关键字" name="keyword" value="{{ keyword }}">
+                </div>
+                <button class="btn btn-default col-md-2" type="submit">搜索</button>
+            </form>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!--表格-->
+    <table class="table table-bordered">
+        <caption>我的订单</caption>
+        <div style="margin-bottom: 5px">
+            <a class="btn btn-success" href="{% url 'my_order_list_add' %}"><i class="bi bi-apple"></i>新建</a>
+        </div>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>类型</th>
+            <th>金额</th>
+            <th>订单号</th>
+            <th>时间</th>
+            <th>其他</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in pager.queryset %}
+            <tr role-id="{{ row.id }}">
+                <td>{{ row.id }}</td>
+                <td>{{ row.get_charge_type_display }}</td>
+                <td>
+                    {{ row.amount }}
+                </td>
+                <td>{{ row.order_cid }}</td>
+                <td>{{ row.creat_date }}</td>
+                <td>{{ row.remark }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul class="pagination">
+        <!--把字符串变成标签-->
+        {{ pager.html }}
+    </ul>
+
+{% endblock %}
+
+
+
+{% block js %}
+
+{% endblock %}

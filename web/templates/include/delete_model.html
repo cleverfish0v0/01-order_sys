@@ -1,0 +1,27 @@
+   <!-- 按钮触发模态框 -->
+    {#    <button class="btn btn-primary btn-lg" data-toggle="modal" >开始演示模态框</button>#}
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true" style="color: red">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">是否要删除此用户</h4>
+                </div>
+                <div class="modal-body">删除后将很难恢复！！！</div>
+
+
+                <div class="modal-footer">
+                    <!--这两个字段可以控制对话框的消失与显现data-dismiss="modal"，data-toggle="modal"-->
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="btnconfirmDelete" style="position: relative">确定删除
+                        <span style="color: red;position: absolute;top: 30px;left: 10px" class="deleteError"></span>
+                    </button>
+                    <!--展示错误信息-->
+
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>

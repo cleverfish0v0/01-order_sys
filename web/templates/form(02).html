@@ -1,0 +1,27 @@
+<!--继承模板-->
+{% extends "layout.html" %}
+
+{% block content %}
+    <!--表单操作-->
+    <form class="form-horizontal" role="form" method="post">
+        <!--添加浮动会清除-->
+        <div class="row clearfix">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="col-sm-6">
+                    <div class="form-group" style="padding: 10px">
+                        <label for="{{ field.id_for_label }}" class="control-label"
+                               style="color: #9d9d9d">{{ field.label }}{{ field.help_text }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <span style="color: red">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div>
+            <button type="submit" class="btn btn-success">保存</button>
+        </div>
+    </form>
+{% endblock %}

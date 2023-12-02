@@ -1,0 +1,178 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load permission %}
+
+
+{% block content %}
+    <div>
+    {% if search_group.get_row_list %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-filter" aria-hidden="true"></i> 快速筛选
+            </div>
+            <div class="panel-body">
+                <div class="search-group">
+                    {% for row in search_group.get_row_list %}
+                        <div class="row">
+                            {% for obj in row %}
+                                {{ obj|safe }}
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    </div>
+
+    <!--表格-->
+    <table class="table table-bordered">
+        <caption>客户列表</caption>
+
+
+        <div class="right">
+            <form class="form-inline row" method="get" accept-charset="UTF-8">
+                <div class="form-group col-md-10">
+                    <input class="form-control" type="text" placeholder="请输入关键字" name="keyword" value="{{ keyword }}">
+                </div>
+                <button class="btn btn-default col-md-2" type="submit">搜索</button>
+            </form>
+            </form>
+        </div>
+
+        {% add_permission request 'customer_add' %}
+
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>邮箱</th>
+            <th>账户余额</th>
+            <th>级别</th>
+            <th>注册时间</th>
+            <th>修改密码</th>
+            <th>交易记录</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in queryset %}
+            <!--自定义属性，用于定位行-->
+            <tr row-id="{{ row.id }}">
+                <td>{{ row.id }}</td>
+                <td>{{ row.username }}</td>
+                <td>{{ row.email }}</td>
+                <td>{{ row.balance }}</td>
+                <td>{{ row.user_level }}</td>
+                <td>{{ row.creat_date }}</td>
+                <!--方案2直接跨表找-->
+                {#                <td>{{ row.creator.username}}</td>#}
+
+                <td>
+                    <a href="{% url 'customer_reset' pk=row.id %}">重置密码</a>
+                </td>
+                <td>
+                    <a href="{% url 'customer_charge' pk=row.id %}">交易记录</a>
+                </td>
+                <td>
+                    <!--后去要编辑哪一行？-->
+                    {% edit_permission request 'customer_edit' pk=row.id %}
+                    <!--获取id属性-->
+                    {% delete_permission request 'customer_delete' pk=row.id %}
+
+                </td>
+
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+
+    <!-- 按钮触发模态框 -->
+    {#    <button class="btn btn-primary btn-lg" data-toggle="modal" >开始演示模态框</button>#}
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true" style="color: red">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">是否要删除此用户</h4>
+                </div>
+                <div class="modal-body">删除后将很难恢复！！！</div>
+
+
+                <div class="modal-footer">
+                    <!--这两个字段可以控制对话框的消失与显现data-dismiss="modal"，data-toggle="modal"-->
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="btnconfirmDelete" style="position: relative">确定删除
+                        <span style="color: red;position: absolute;top: 30px;left: 10px" class="deleteError"></span>
+                    </button>
+                    <!--展示错误信息-->
+
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <ul class="pagination">
+        <!--把字符串变成标签-->
+        {{ page_string }}
+    </ul>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        //全局变量传递参数
+        var DELETE_ID;
+        $(function () {
+            bindDeleteEvent();
+            bindConfirmDeleteEvent();
+        });
+
+        function bindDeleteEvent() {
+            $(".btn-delete").click(
+                function () {
+                    $('#deleteModal').modal('show')
+                    DELETE_ID = $(this).attr('cid');
+                    console.log(DELETE_ID)
+                }
+            )
+        }
+
+        function bindConfirmDeleteEvent() {
+            $('#btnconfirmDelete').click(function () {
+                console.log("确认删除", DELETE_ID)
+                //清空内部
+                $('.deleteError').empty();
+                //$('#deleteModal').modal('hide')
+                //发送ajax请求,/xxx/xxx/?数据
+                $.ajax({
+                    url: '{% url 'customer_delete' %}',
+                    type: 'GET',
+                    data: {'cid': DELETE_ID},
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if (res.status) {
+                            console.log(res);
+                            //方式一：删除成功重定向
+                            location.reload('{% url 'customer_list' %}');
+                            //方式二：找到当前行删除掉,字符串相加DELETE_ID
+                            // $("tr[row-id='2']").remove()
+                        } else {
+                            //失败处理，展示页面信息
+                            $('.deleteError').text(res.detail);
+                        }
+
+                    }
+                })
+            })
+        }
+    </script>
+
+{% endblock %}

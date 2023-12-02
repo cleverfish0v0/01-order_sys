@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--直接写路径-->
+    <!--<link rel="stylesheet" href="/static/bootstrap-3.4.1/css/bootstrap.css">-->
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <style>
+        .box {
+            width: 480px;
+            border: 1px solid #dddddd;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 70px;
+
+            padding: 10px 20px 10px 20px;
+
+            box-shadow: 5px 5px 5px 5px;
+        }
+
+        .error_message {
+            color: red;
+            position: absolute
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1 style="text-align: center">密码登入</h1>
+    <form method="post" id="login_form">
+        {% csrf_token %}
+
+        <!--使用循环的方式拿取form-->
+        <!--无法存储id字段-->
+        {% for field in form %}
+            <!--每个field都是一个字段-->
+            <div class="form-group" style="position: relative;margin-bottom: 25px">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                <span class="error_message">{{ field.errors.0 }}</span>
+            </div>
+        {% endfor %}
+        <button type="button" class="btn btn-success" id="login">登入</button>
+        <!--提取参数-->
+        <!--<span style="color: red">{{ error }}</span>-->
+        <a id="2" href="{% url 'email_login' %}" style="float: right">邮箱登入</a>
+    </form>
+</div>
+
+<script src={% static "js/jquery3.6.0.js" %}></script>
+<script src={% static "js/csrf.js" %}></script>
+<script>
+    //加载完框架后执行绑定事件
+    $(function () {
+        //执行绑定
+        bindLoginEvent();
+    })
+
+    function bindLoginEvent() {
+        //提交表单的请求事件（提交ajax请求）
+        $("#login").click(function () {
+            //清除所有错误信息
+            console.log(1)
+            $(".error_message").empty()
+            console.log(2)
+            $.ajax({
+                url: "{% url 'login' %}",
+                type: "POST",
+                data: $("#login_form").serialize(),
+                dataTypes: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        console.log(res)
+                        {#利用location.href进行从定向#}
+                        location.href = res.data;
+                    } else {
+                        $.each(res.detail, function (k, v) {
+                            $("#id_" + k).next().text(v[0])
+                        })
+                    }
+                }
+            })
+
+        })
+    }
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!--继承模板-->
+{% extends "layout.html" %}
+
+{% block content %}
+    <!--表单操作-->
+    <form class="form-horizontal" role="form" method="post">
+        {% csrf_token %}
+        {% for file in form %}
+
+            <div class="form-group">
+                <label for="{{ file.id_for_label }}" class="control-label"
+                       style="'help_text':{color: #9d9d9d}">{{ file.label }}({{ file.help_text }})</label>
+                {{ file }}
+                <span style="color: red">{{ file.errors.0 }}</span>
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-success">保存</button>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,209 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--直接写路径-->
+    <!--<link rel="stylesheet" href="/static/bootstrap-3.4.1/css/bootstrap.css">-->
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1/css/bootstrap.css' %}">
+    <style>
+        .box {
+            width: 480px;
+            border: 1px solid #dddddd;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 70px;
+            padding: 10px 20px 10px 20px;
+            box-shadow: 5px 5px 5px 5px;
+        }
+
+        .error_message {
+            color: red;
+            position: absolute
+        }
+    </style>
+
+
+</head>
+<body>
+<div class="box">
+    <h1 style="text-align: center">邮箱登入</h1>
+    <!--novalidate去除表单上的默认非空验证-->
+    <form method="post" id="email_form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_role">角色</label>
+            {{ form.role }}
+            <span class="error_message">{{ form.role.errors.0 }}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="id_email">邮箱</label>
+            <div class="row">
+                <div class="col-md-7">
+                    {{ form.email }}
+                </div>
+                <div class="col-md-5">
+                    <!--button默认type类型为submit-->
+                    <button class="btn btn-success col-lg-4" id="send_btn" type="button">发送</button>
+                </div>
+            </div>
+            <span class="error_message">{{ form.email.errors.0 }}</span>
+        </div>
+
+        <div class="form-group">
+            <label for="id_code">验证码</label>
+            {{ form.code }}
+            <span class="error_message">{{ form.code.errors.0 }}</span>
+        </div>
+        <button type="button" class="btn btn-success" id="email_login">登入</button>
+        <a id="2" href="{% url 'login' %}" style="float: right">密码登入</a>
+    </form>
+</div>
+
+<script src={% static "js/jquery3.6.0.js" %}></script>
+<script src={% static "js/csrf.js" %}></script>
+<script>
+    //页面框架加载完成自动执行，不是全部页面加载出来
+    $(function () {
+        //执行绑定
+        bindSendEmailEvent();
+
+        bindLoginEvent();
+    })
+
+    function bindLoginEvent() {
+        //提交表单的请求事件（提交ajax请求）
+        $("#email_login").click(function () {
+            //清除所有错误信息
+            console.log(1)
+            $(".error_message").empty()
+            console.log(2)
+            $.ajax({
+                url: "{% url 'email_login' %}",
+                type: "POST",
+                data: $("#email_form").serialize(),
+                dataTypes: "JSON",
+                success: function (res) {
+                    console.log(res)
+                    if (res.status) {
+                        {#利用location.href进行从定向#}
+                        location.href = res.data;
+                    } else {
+                        $.each(res.detail, function (k, v) {
+                            if (k === "email") {
+                                //邮箱的错误返回,相对定位不影响布局！！！
+                                $("#id_" + k).parent().parent().next().text(v[0]);
+                            } else {
+                                //其他的错误返回
+                                $("#id_" + k).next().text(v[0]);
+                            }
+
+                        })
+                    }
+                }
+            })
+
+        })
+    }
+
+    //绑定方法，邮箱校验，获取邮箱，发送请求
+    function bindSendEmailEvent() {
+        //发送邮箱的请求事件
+        $("#send_btn").click(function () {
+            //清除错误信息
+            $(".error_message").empty()
+            // 获取邮箱,向后台发送请求
+            //1. 获取邮箱，向后台发送请求
+            var email_ = $("#id_email").val();
+            var role_ = $('#id_role').val();
+            {#var Is_Email_ = IsEmail(email_);#}
+            var Is_Email_ = 1;
+            if (!Is_Email_) {
+                console.log("邮箱不正确");
+            } else {
+                //判断邮箱是否合法
+                var xhr = $.ajax({
+                    //导入是不能这么用
+                    url: "{% url 'email_send' %}",
+                    //type:"GET",
+                    //POST请求需要到游览器里面的cookie去拿csrftoken，添加进请求头里面，django读那个请求头就写进哪里
+                    //调用django提供的函数获取
+                    //要用ajax请求页面必须携带
+                    type: 'POST',
+                    headers: {
+                        //可以不用带
+                    },
+                    data: {email: email_,role:role_},
+                    {#把js字符串可能得对象转化为对象#}
+                    dataTypes: "JSON",
+                    success: function (res) {
+                        //res是返回的对象
+                        console.log(1, res.detail);
+                        if (res.status) {
+                            //校验成功后做的操作
+                            console.log("成功")
+                            ChangeSecond();
+                            //判断是否校验成功
+                        } else {
+                            //校验失败后做的操作
+                            //each循环对象，执行匿名函数
+                            //{'status': False, 'detail': forms.errors}循环detail里面的字典，forms.errors
+                            $.each(res.detail, function (k, v) {
+                                console.log(2, k);
+                                console.log(3, v);
+                                //console.log(4,$("#id_" + k).parent().parent().next()[0]);
+                                {#$("#id_" + k).next().next().text(v[0]);#}
+                                //只针对邮箱的错误返回
+                                $("#id_" + k).parent().parent().next().text(v[0]);
+
+                            })
+                        }
+
+                    },
+                })
+
+            }
+        })
+
+
+    }
+
+
+    //读秒效果
+    function ChangeSecond() {
+        //2. 点击事件变成读秒
+        var $emailBtn = $("#send_btn");
+        //找到标签，添加读秒内容，按钮值在val中
+        {#console.log(1,$emailBtn.text());#}
+        // 添加禁用属性
+        $emailBtn.prop("disabled", true);
+        // 定时器,一千毫秒执行一次
+        var time = 59;
+        var ID = setInterval(function () {
+            $emailBtn.text(time + "秒");
+            time = time - 1;
+            if (time < 1) {
+                clearInterval(ID);
+                //去除禁用状态，可点击发送
+                $emailBtn.text("发送");
+                $emailBtn.prop("disabled", false);
+
+            }
+        }, 1000)
+
+    }
+
+    //邮箱校验
+    function IsEmail(str) {
+        var reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+        return reg.test(str);
+    }
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<div class="multi-menu">
+    {% for item in menu_list %}
+        <div class="item">
+            <div class="title">
+                <span class="icon_wrap"><i class="{{ item.icon }}"></i></span> {{ item.text }}
+            </div>
+            <div class="body {{ item.class }}">
+                {% for child in item.children %}
+                    <div class='link_'>
+                        <a class="btn btn-dark {{ child.class }}" href="{{ child.url }}">{{ child.text }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

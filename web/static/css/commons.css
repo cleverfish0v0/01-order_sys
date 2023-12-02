@@ -1,0 +1,140 @@
+.left{
+    float: left;
+}
+
+.right{
+    float: right;
+}
+
+/* 页面背景 */
+.body {
+    background-color: #333; /* 深灰色背景 */
+    color: #fff; /* 白色文本颜色 */
+}
+
+/* 顶部区域 */
+.pg_header {
+    background-color: #000; /* 纯黑色背景 */
+    height: 58px;
+}
+
+/* 页面主体 */
+.pg_body {
+    display: flex;
+}
+
+/* 左侧菜单区域 */
+.left_menu {
+    background-color: #222; /* 较深的灰色背景 */
+    position: absolute;
+    left: 1px;
+    top: 58px;
+    bottom: 0;
+    width: 220px;
+    border: 1px solid #444; /* 中灰色边框 */
+    overflow: auto;
+}
+
+/* 右侧内容区域 */
+.right_body {
+    background-color: #444; /* 中灰色背景 */
+    position: absolute;
+    left: 225px;
+    right: 0;
+    top: 58px;
+    bottom: 0;
+    overflow: scroll;
+    border: 1px solid #444; /* 中灰色边框 */
+    border-top: 0;
+    font-size: 13px;
+    min-width: 755px;
+    color: white;
+}
+
+/* 多级菜单样式 */
+.multi-menu {
+    background-color: #222; /* 较深的灰色背景 */
+    border: 1px solid #444; /* 中灰色边框 */
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+/* 菜单项样式 */
+.item {
+    margin: 10px 0;
+}
+
+/* 菜单标题样式 */
+.title {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px;
+    border-bottom: 1px solid #444; /* 中灰色底部边框 */
+}
+
+/* 图标样式 */
+.icon_wrap {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+/* 菜单链接样式 */
+.body {
+    padding: 10px;
+}
+
+.link_ {
+    border: 1px solid #333; /* 深灰色边框 */
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #333; /* 深灰色背景 */
+    text-align: center;
+}
+
+.link_ a {
+    text-decoration: none;
+    color: #fff; /* 白色文本颜色 */
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.link_ a.btn {
+    background-color: #444; /* 中灰色背景 */
+    color: #fff; /* 白色文本颜色 */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.link_ a.btn:hover {
+    background-color: #333; /* 深灰色背景 */
+    color: #fff; /* 白色文本颜色 */
+}
+
+/*自定义from-redid样式*/
+
+.form-redid{
+    padding: 0;
+    list-style-type: none;
+}
+
+.form-redid li{
+    display: inline-block;
+    padding-right: 20px;
+    padding-top: 7px;
+}
+
+.form-redid li label{
+    font-weight: normal;
+    font-size: 13px;
+}

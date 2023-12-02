@@ -1,0 +1,35 @@
+<!--继承模板-->
+{% extends "layout.html" %}
+
+{% block content %}
+    <!--表格-->
+    <table class="table table-bordered">
+        <caption>用户等级</caption>
+        <div style="margin-bottom: 5px">
+            <a class="btn btn-success" href="{% url 'level_add' %}"><i class="bi bi-apple"></i>新建</a>
+        </div>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>折扣</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in queryset %}
+            <tr>
+                <td>{{ row.id }}</td>
+                <td>{{ row.title }}</td>
+                <td>{{ row.percent }}%</td>
+                <td>
+                    <!--后去要编辑哪一行？-->
+                    <a href="{% url 'level_edit' pk=row.id %}" class="btn btn-primary btn-xs">编辑</a>
+                    <a href="{% url 'level_delete' pk=row.id %}" class="btn btn-danger btn-xs">删除</a>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

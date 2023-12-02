@@ -1,0 +1,73 @@
+/* 多级菜单样式 */
+.multi-menu {
+    background-color: #444; /* 深灰色背景 */
+    border: 1px solid #444; /* 深灰色边框 */
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #fff; /* 白色文本颜色 */
+}
+
+/* 菜单项样式 */
+.item {
+    margin: 10px 0;
+}
+
+/* 菜单标题样式 */
+.title {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px;
+    border-bottom: 1px solid #666; /* 中灰色底部边框 */
+}
+
+/* 图标样式 */
+.icon_wrap {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+/* 菜单链接样式 */
+.body {
+    padding: 10px;
+}
+
+.link_ {
+    border: 1px solid #666; /* 中灰色边框 */
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #666; /* 中灰色背景 */
+    text-align: center;
+}
+
+.link_ a {
+    text-decoration: none;
+    color: #fff; /* 白色文本颜色 */
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.link_ a.btn {
+    background-color: #444; /* 深灰色背景 */
+    color: #fff; /* 白色文本颜色 */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.link_ a.btn:hover {
+    background-color: #666; /* 中灰色背景 */
+    color: #fff; /* 白色文本颜色 */
+}
+
+.multi-menu .item > .body a.active{
+    border-left: 10px solid #fff;
+}
